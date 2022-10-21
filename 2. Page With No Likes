@@ -1,0 +1,28 @@
+https://datalemur.com/questions/sql-page-with-no-likes
+
+/**
+
+Two Tables : pages and page likes
+pages -->> Contain PageID and Name
+PageLikes --->> contain UserID, PageID, LikedDate
+
+JOIN BY PageID
+
+PROBLEM: query to return the page IDs
+of all the Facebook pages that don't have any likes.
+
+PSEUDO Code:
+
+LEFT JOIN the pages to PageLikes
+WHERE page_likes.page_id is NULL
+
+*/
+
+SELECT
+pg.page_id
+FROM pages pg
+LEFT JOIN page_likes pgLk
+ON pg.page_id = pgLk.page_id
+WHERE pgLk.page_id IS NULL;
+
+
