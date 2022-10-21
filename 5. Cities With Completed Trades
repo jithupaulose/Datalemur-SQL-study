@@ -1,0 +1,20 @@
+https://datalemur.com/questions/completed-trades
+
+
+/**
+
+Two Tables: trades and users. Joining Condition :- user_id
+
+Question :: Write a query to list the top three cities 
+that have the most completed trade orders in descending order.
+
+*/
+
+SELECT city, count(status) as total_orders
+FROM users U
+JOIN trades T
+ ON U.user_id = T.user_id
+ WHERE status = 'Completed'
+ Group by city
+ order by total_orders DESC 
+ limit 3
