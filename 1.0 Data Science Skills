@@ -1,0 +1,26 @@
+https://datalemur.com/questions/matching-skills
+
+
+/**
+One table
+Given CandidateID and Skills 
+Find the candidate who is best suitable for DS JOB
+Candidate who have all skills need to list 
+
+Pseudo Code:
+
+1. WHERE condition. Skill in (all three skills)
+2. Group by Candidate_id
+3. Having count(*) =3
+4. Order by candidate_id ASC
+
+*/
+
+SELECT candidate_id
+FROM candidates
+WHERE skill IN ( 'Python', 'Tableau', 'PostgreSQL' )
+GROUP BY candidate_id
+HAVING COUNT(*) = 3
+ORDER BY 1
+
+ 
