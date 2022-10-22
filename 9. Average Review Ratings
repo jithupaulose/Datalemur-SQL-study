@@ -1,0 +1,20 @@
+https://datalemur.com/questions/sql-avg-review-ratings
+
+
+/**
+PSEUDO CODE:
+average stars for each product every month --> GROUP BY month,product id
+product id, and average star rating rounded to two decimal places
+---> ROUND(avgvalue,2), ROUND(product_id,2)
+
+month in numerical value --> EXTRACT(Month FROM )
+
+*/
+
+SELECT
+  EXTRACT(month from submit_date) AS mnt,
+  product_id AS product_id,
+  ROUND(AVG(stars),2) AS avg_stars
+FROM reviews
+GROUP BY 1,2
+ORDER BY 1,2;
