@@ -1,0 +1,21 @@
+https://datalemur.com/questions/sql-histogram-tweets
+
+date_part(‘year’, tweet_date) =  
+WHERE tweet_date BETWEEN ‘01-01-2022’ AND ‘12-31-2022’ =
+ EXTRACT( YEAR FROM tweet_date)
+
+
+WITH CTE AS
+(
+  SELECT
+    user_id,
+    COUNT(tweet_id) AS cnt 
+  FROM tweets
+  WHERE DATE_PART('YEAR',tweet_date) = 2022
+  GROUP BY user_id
+)
+SELECT
+cnt as tweet_bucket,
+count(*) as users_num
+FROM CTE 
+GROUP BY 1;
