@@ -1,0 +1,16 @@
+https://datalemur.com/questions/duplicate-job-listings
+
+
+WITH CTE AS
+(
+  SELECT
+    company_id,
+    title,
+    description, COUNT(*) as cnt 
+  FROM job_listings
+  GROUP BY 1,2,3
+)
+
+SELECT COUNT(*) AS co_w_duplicate_jobs
+FROM CTE
+WHERE cnt > 1
