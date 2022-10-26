@@ -1,0 +1,9 @@
+https://datalemur.com/questions/linkedin-power-creators
+
+SELECT 
+  PP.profile_id 
+FROM personal_profiles PP
+JOIN company_pages CP
+ON PP.employer_id = CP.company_id
+WHERE PP.followers > CP.followers
+ORDER BY 1;
