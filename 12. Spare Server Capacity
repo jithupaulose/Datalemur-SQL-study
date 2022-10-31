@@ -1,0 +1,38 @@
+https://datalemur.com/questions/sql-spare-server-capacity
+
+
+/**
+three tables: customers, datacenters, and forecasted_demand.
+
+PROBLEM: 
+understand how much data its customers are using, 
+and how much spare capacity is left in each of it's data centers
+
+
+find the total monthly unused server capacity for each data center. 
+Output the data center id in ascending order and the total spare capacity.
+
+
+PSUEDO CODE:
+
+1. FIND monthly_capacity - monthly_demand = spare_capacity
+2. WITH CTE FIND THE SUM(monthly_demand) for each datacenter
+3. JOIN with datacenters table and substract the monthly_capacity - sum_monthly_demand
+*/
+
+WITH sum_Demand_Monthly AS
+(
+SELECT 
+  datacenter_id,
+  SUM(monthly_demand) as sum_monthly_demand
+FROM forecasted_demand
+GROUP BY datacenter_id
+)
+
+SELECT 
+  S.datacenter_id,
+  (monthly_capacity - sum_monthly_demand) AS spare_capacity
+FROM sum_Demand_Monthly S
+JOIN datacenters D
+ON S.datacenter_id = D.datacenter_id
+order by 1
