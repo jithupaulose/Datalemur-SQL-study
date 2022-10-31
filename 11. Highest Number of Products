@@ -1,0 +1,19 @@
+https://datalemur.com/questions/sql-highest-products
+
+/**
+Table  containing information on various orders made by eBay customers.
+
+
+PROBLEM: 
+Write a query to obtain the 
+user IDs and number of products purchased by the top 3 customers; 
+these customers must have spent at least $1,000 in total.
+*/
+SELECT
+user_id,
+COUNT(product_id) AS product_num
+FROM user_transactions
+GROUP BY user_id
+HAVING SUM(spend) >= 1000
+ORDER BY 2 DESC,SUM(spend) DESC
+LIMIT 3
