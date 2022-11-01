@@ -1,0 +1,31 @@
+https://datalemur.com/questions/teams-power-users
+
+/**
+CONTEXT: users sending the messages in Teams
+
+
+PROBLEM : find the top 2 power users who sent the 
+most messages on Microsoft Teams in August 2022.
+ Also get the total number of messages they SENT 
+ DESC order the count.
+ 
+ PSUEDO CODE:
+ 
+ GROUP BY sender_id ,LIMIT 2 , COUNT(message_id) 
+ 
+ get it in August 2022::
+ EXTRACT(MONTH FROM sent_date) = '8' AND EXTRACT(YEAR FROM sent_date) = '2022'
+ 
+ to_char(sent_date, 'YYYY-MM')='2022-08'
+
+ date_part('month',sent_date) = '08' and  date_part('year',sent_date) = '2022'
+ */
+
+SELECT
+sender_id,
+COUNT(message_id) AS message_count
+FROM messages
+WHERE to_char(sent_date, 'YYYY-MM')='2022-08'
+GROUP BY sender_id
+ORDER BY 2 DESC
+LIMIT 2
