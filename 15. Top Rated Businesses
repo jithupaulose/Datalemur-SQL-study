@@ -1,0 +1,22 @@
+https://datalemur.com/questions/sql-top-businesses
+
+/**
+CONTEXT: table below containing information on user reviews.
+
+PROBLEM:
+query to obtain the number and percentage of businesses that are top rated.
+A top-rated busines is defined as one whose reviews contain only 4 or 5 stars.
+
+PSUEDO CODE:
+
+COUNT(business_id) AS business_count
+COUNT(business_id) * 100 / (SELECT COUNT(*) FROM reviews)  AS top_rated_pct
+WHERE review_stars IN ( 4,5)
+
+*/
+SELECT 
+COUNT(business_id) AS business_count,
+ROUND(COUNT(business_id) * 100 / (SELECT COUNT(*) FROM reviews),0)  AS top_rated_pct
+FROM reviews
+WHERE review_stars IN (4,5)
+
