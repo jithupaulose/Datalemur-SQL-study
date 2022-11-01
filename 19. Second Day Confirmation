@@ -1,0 +1,28 @@
+https://datalemur.com/questions/second-day-confirmation
+
+/**
+CONTEXT: New TikTok users sign up with their emails 
+and each user receives a text confirmation to activate their account.
+
+Two tables: emails and texts
+JOINING CONDITION: emails.email_id = texts.email_id
+
+PROBLEM: query to display the ids of the users 
+who did not confirm on the first day of sign-up, but confirmed on the second day
+
+
+PSEUDO CODE:
+1. user_id FROM THE EMAILS TABLE
+2. JOIN the texts table on emails.email_id = texts.email_id
+3. signup_action = 'Confirmed'
+4. date differnece blw signup_date and  action_date = 1
+
+*/
+
+SELECT
+E.user_id
+FROM emails E 
+JOIN texts T
+ON E.email_id = T.email_id
+WHERE T.signup_action = 'Confirmed' AND 
+EXTRACT(DAY FROM (action_date - signup_date)) = 1;
