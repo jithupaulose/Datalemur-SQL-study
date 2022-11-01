@@ -1,0 +1,39 @@
+https://datalemur.com/questions/sql-average-post-hiatus-1
+
+/**
+COTEXT:
+table of Facebook posts, for each user who posted at least twice in 2021
+
+
+PROBLEM:
+find the number of days between each user’s first post of the year 
+and last post of the year in the year 2021
+
+PSUEDO CODE:
+1. FIND THE MIN(post_date) AND MAX(post_date) --> GROUP BY user_id IN 2021
+
+Many ways can come up with this.
+a. EXTRACT(DAYS FROM MAX(post_date) - MIN(post_date))
+b. DATE_PART('day', MAX(post_date::timestamp) - MIN(post_date::timestamp))
+c. DATE_PART('day',max(post_date)-min(post_date) 
+d. MAX(post_date::DATE)  - MIN(post_date::DATE)
+
+FILTER year 2021
+a. DATE_PART('year',post_date) = 2021
+b. EXTRACT(year from post_date) = 2021
+
+2. GET THE USER which commit atleast 2 posts
+HAVING COUNT(user_id) > 1
+
+*/
+SELECT
+user_id,
+DATE_PART( 'day', MAX(post_date) - MIN(post_date)) AS days_between
+FROM posts
+WHERE EXTRACT(year from post_date) = 2021
+GROUP BY user_id
+HAVING COUNT(*) > 1;
+
+
+
+
