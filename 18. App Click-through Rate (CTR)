@@ -1,0 +1,39 @@
+https://datalemur.com/questions/sql-app-ctr
+
+/**
+
+CONTEXT: events table on app analytics
+
+PROBLEM: 
+get the app’s click-through rate (CTR %) in 2022.
+results in percentages rounded to 2 decimal places
+To avoid integer division, you should multiply the click-through rate by 100.0
+
+Percentage of click-through rate = 
+100.0 * Number of clicks / Number of impressions
+
+PSUEDO CODE:
+
+Ç
+SUM(CASE WHEN event_type = 'click' THEN 1 ELSE O END) AS no_clicks
+SUM(CASE WHEN event_type = 'impression' THEN 1 ELSE O END) AS no_impression
+WITH CTE 
+EXTRACT(year FROM timestamp) = 2022
+
+*/
+
+WITH CTE AS
+(
+SELECT 
+  app_id,
+  SUM(CASE WHEN event_type = 'click' THEN 1 ELSE 0 END) AS no_clicks,
+  SUM(CASE WHEN event_type = 'impression' THEN 1 ELSE 0 END) AS no_impression
+  FROM events
+  --WHERE EXTRACT(year FROM timestamp) = 2022
+  WHERE DATE_PART('year', timestamp) = 2022
+  GROUP BY app_id
+)
+
+SELECT app_id,
+  ROUND(no_clicks*100.0/no_impression,2) AS ctr
+FROM CTE 
