@@ -1,0 +1,51 @@
+https://datalemur.com/questions/compensation-outliers
+
+/**
+CONTEXT: review employees who are potentially overpaid or underpaid
+
+PROBLEM:
+query that shows the following data for each compensation outlier: 
+employee ID, salary, and whether they are potentially overpaid or 
+potentially underpaid 
+
+An employee is considered to be potentially 
+overpaid if they earn more than 2 times the average salary for people 
+with the same title. 
+Similarly, an employee might be underpaid if they earn 
+less than half of the average for their title
+
+PSEODO CODE:
+1. Find the average salary for people with the same title
+2. GROUP BY title
+3. AVG(salary)
+4. WITH CTE STATEMENT
+5. CASE WHEN AVG(salary)* 2 < salary THEN Overpaid
+6. WHEN AVG(salary)/ 2 > salary THEN Underpaid ELSE 'Paid ok'
+
+
+*/
+WITH avg_CTE AS
+(
+SELECT 
+  title,
+  AVG(salary) AS avg_salary
+FROM employee_pay
+GROUP BY title
+),
+status_CTE AS
+(
+SELECT
+  E.*,
+   CASE WHEN salary > avg_salary*2 THEN 'Overpaid'
+        WHEN  salary < avg_salary/2 THEN 'Underpaid'
+        ELSE 'Good' END AS status
+FROM employee_pay E
+LEFT JOIN avg_CTE A
+ON E.title = A.title
+)
+SELECT 
+  employee_id,
+  salary,
+  status
+FROM status_CTE
+WHERE status <> 'Good';
