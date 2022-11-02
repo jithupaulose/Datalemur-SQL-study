@@ -1,0 +1,41 @@
+https://datalemur.com/questions/rolling-average-tweets
+
+/**
+CONTEXT: 
+The table below contains information about tweets over a given period of time.
+
+PROBLEM:
+Calculate the 3-day rolling average of tweets 
+published by each user for each date that a tweet was posted. 
+
+Output the user id, tweet date, and rolling averages rounded to 2 decimal places.
+
+FIND the Moving Average
+
+PSEUDO CODE:
+1. SELF JOIN Tricks
+2. GROUP BY user_id,tweet_date
+3. ROUND(,2)
+4. ORDER BY user id, tweet date
+
+*/
+
+WITH CTE AS
+(
+SELECT
+  user_id,
+  tweet_date,
+  COUNT(DISTINCT tweet_id) AS tweet_num
+FROM tweets
+GROUP BY user_id, tweet_date
+
+)
+
+SELECT 
+  user_id,
+  tweet_date,
+  ROUND(AVG(tweet_num) 
+  OVER(PARTITION BY user_id ORDER BY user_id, tweet_date
+  ROWS BETWEEN 2 PRECEDING AND CURRENT ROW
+  ),2) as rolling_avg_3days
+FROM CTE
