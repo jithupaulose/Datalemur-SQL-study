@@ -1,0 +1,45 @@
+https://datalemur.com/questions/odd-even-measurements
+
+/** 
+CONTEXT:
+Table contains measurement values obtained from a sensor over several days. 
+Measurements are taken several times within a given day.
+
+QUESTION:
+obtain the sum of the odd-numbered 
+and even-numbered measurements on a particular day, 
+in two different columns.
+
+Clue: 1st, 3rd, 5th measurements within a day are considered odd-numbered 
+measurements and the 2nd, 4th, 6th measurements are even-numbered measurements.
+
+PSUEDO CODE:
+1. CTE statement and a Window func - Row_number() 
+2. Bolded comment says within a day - means partition by the each day
+3. Take the date from the time:
+    DATE(measurement_time)
+    date_trunc('day',measurement_time )
+    CAST(datetime_expression AS DATE)
+    measurement_time::date
+    
+4. CASE/IF Statement SUM() rowNo%2 = 0 THEN
+
+*/
+
+WITH CTE AS 
+(
+SELECT
+   *,
+   ROW_NUMBER() OVER(PARTITION BY date_trunc('day',measurement_time ) 
+   ORDER BY measurement_time ASC) AS rn   
+   FROM measurements
+)
+SELECT 
+date_trunc('day',measurement_time) measurement_day,
+SUM(CASE WHEN rn%2 <> 0 THEN measurement_value ELSE 0 END) AS odd_sum,
+SUM(CASE WHEN rn%2 = 0 THEN measurement_value ELSE 0 END) AS even_sum
+FROM CTE
+GROUP BY 1
+order by 1;
+
+
