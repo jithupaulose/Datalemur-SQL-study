@@ -1,0 +1,51 @@
+https://datalemur.com/questions/linkedin-power-creators-part2
+
+/**
+CONTEXT: 
+LinkedIn Creator team is looking for power creators 
+who use their personal profile as a company or influencer page. 
+
+Three Tables: personal_profiles A & employee_company B & company_pages C
+JOIN condition: 
+A.profile_id = B.personal_profile_id
+B.company_id = C.company_id
+
+CRIETERIA:
+Power Creator = someone's Linkedin page has more followers 
+than all the company they work for
+
+
+QUESTION:
+query to return the IDs of these LinkedIn power creators in ascending order.
+
+points: 
+  A person can work at multiple companies.
+  In the case of multiple companies, use the one with largest follower base
+  
+PSEODO CODE:
+
+1. INNER JOIN THREE Tables with condition and WHERE condition 
+2. Window function - rank() over( partiton by profle_id order by Companyfollower desc )
+
+*/
+
+
+WITH CTE AS
+(
+  SELECT
+  A.profile_id, 
+  A.followers AS A_followers,
+  C.followers AS C_followers,
+  RANK() OVER(PARTITION BY A.profile_id ORDER BY C.followers DESC) as rn
+  FROM personal_profiles A
+  JOIN employee_company B
+    ON A.profile_id = B.personal_profile_id
+  JOIN company_pages C
+    ON B.company_id = C.company_id
+ 
+)
+
+SELECT profile_id 
+FROM CTE 
+WHERE rn = 1 
+AND A_followers > C_followers
