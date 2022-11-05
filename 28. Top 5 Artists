@@ -1,0 +1,59 @@
+https://datalemur.com/questions/top-fans-rank
+
+/**
+CONTEXT:
+Three Spotify tables containing information about the 
+artists, songs, and music charts.
+
+Tables:: artists A && songs B && global_song_rank C
+JOIN condition:: 
+  A.artist_id = B.artist_id
+  B.song_id = C.song_id
+
+
+PROBLEM: 
+query to determine the top 5 artists 
+whose songs appear in the 
+Top 10 of the global_song_rank table the highest number of times
+
+5 artist names in ascending order along with their song appearances ranking 
+
+
+PSEDO CODE:
+HIGHEST No of Times in the global_song_rank table  -->
+means find count(distinct times)
+find the top 5 artist name  : either limit 5
+
+1. WITH CTE STATEMENT
+2. ALL 3 TABLES JOIN TOGETHER
+4. CALL OUT -- GROUP BY artist_name
+
+*/
+WITH CTE AS
+(
+  SELECT 
+    artist_name,
+    C.song_id as C_song_id,
+    C.rank as C_rank
+  FROM artists A
+  JOIN songs B 
+    ON A.artist_id = B.artist_id
+  JOIN global_song_rank C
+    ON B.song_id = C.song_id 
+),
+CTE2 AS
+(
+  SELECT 
+    artist_name,
+    COUNT(C_song_id),
+    DENSE_RANK() OVER( ORDER BY COUNT(C_song_id) DESC) AS artist_rank
+  FROM CTE
+  WHERE C_rank <=10
+  GROUP BY artist_name
+)
+
+SELECT 
+  artist_name,
+  artist_rank
+FROM CTE2
+WHERE artist_rank <= 5 ;
