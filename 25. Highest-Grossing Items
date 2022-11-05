@@ -1,0 +1,45 @@
+https://datalemur.com/questions/sql-highest-grossing
+
+/**
+CONTEXT:
+table below containing information on Amazon customers 
+and their spend on products belonging to various categories
+
+
+QUESTION:
+Find the top two highest-grossing products within each category in 2022
+
+
+PSEUDO CODE:
+1. WITH CTE STATEMENT
+2. Window function ROW_NUMBER 
+  a) partition by category ORDER BY SUM(spend)
+3. GROUP BY category,product 
+  
+3. year = 2022 
+      DATE_PART('YEAR', transaction_date) = 2022
+      EXTRACT(YEAR FROM transaction_date) = 2022
+      transaction_date >= '01/01/2022' and transaction_date <= '12/31/2022'
+  
+
+*/
+
+WITH CTE AS
+(
+SELECT
+  category,
+  product,
+  SUM(spend) AS total_spend,
+  ROW_NUMBER() OVER(PARTITION BY  category
+                ORDER BY SUM(spend) DESC) AS row1
+FROM product_spend
+WHERE EXTRACT(YEAR FROM transaction_date) = 2022
+GROUP BY category, product
+)
+
+SELECT 
+  category,
+  product,
+  total_spend
+FROM CTE
+WHERE row1 <=2
