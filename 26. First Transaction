@@ -1,0 +1,34 @@
+
+https://datalemur.com/questions/sql-first-transaction
+/**
+CONTEXT:  
+Table shows a user transactions.
+
+QUESTION:
+query to obtain the list of customers 
+whose first transaction was valued at $50 or more
+
+transaction_date field to determine which 
+transaction should be labeled as the first for each user.
+
+PSUEDO CODE:
+
+COUNT(DISTINCT user_id) - count the no of customers whose first tran >= 50
+WINDOW FUNCTION - dense_rank() - PARTITION BY user_id ORDER BY transaction_date
+WHERE condition = rank = 1 and spend >= 50
+
+*/
+
+WITH CTE AS
+(
+SELECT
+  user_id,
+  spend,
+  DENSE_RANK() OVER(PARTITION BY user_id ORDER BY transaction_date ASC) AS rnk
+FROM user_transactions
+)
+
+SELECT
+COUNT(DISTINCT user_id) AS users
+FROM CTE 
+WHERE rnk = 1 AND spend >= 50
