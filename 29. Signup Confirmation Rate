@@ -1,0 +1,42 @@
+https://datalemur.com/questions/signup-confirmation-rate
+
+/**
+CONTEXT: 
+New TikTok users sign up with their emails, 
+so each signup requires a text confirmation to activate the new user's account.
+
+TWO TABLES:
+emails A && texts B
+A.email_id = B.email_id
+
+QUESTION:
+ query to find the confirmation rate of users who 
+ confirmed their signups with text messages. 
+ Round the result to 2 decimal places.
+
+PSEUDO CODE:
+1. LEFT JOIN both tables
+
+SOLUTION 1:
+
+WITH CTE AS
+
+(
+SELECT 
+ROUND(COUNT(*)*1.0/(SELECT COUNT(*) FROM emails),2) AS confirm_rate
+FROM emails A
+LEFT JOIN texts B
+ON A.email_id = B.email_id
+WHERE B.signup_action = 'Confirmed'
+)
+
+SELECT * from cte
+
+*/
+
+SELECT
+ROUND(SUM(CASE WHEN B.signup_action = 'Confirmed' THEN 1 ELSE 0 END)*1.0/COUNT(DISTINCT user_id),2) AS confirm_rate
+
+FROM emails A
+LEFT JOIN texts B
+ON A.email_id = B.email_id
