@@ -1,0 +1,25 @@
+https://datalemur.com/questions/money-transfer-relationships
+
+
+/**
+CONTEXT: payments Related
+Table of PayPal payments showing the payer, the recipient, and the amount paid
+
+QUESTION:
+query to find the number of two-way unique relationships in this data.
+
+A two-way unique relationship is established 
+  when two people send money back and forth
+  
+PSEODO CODE:
+1. SELF JOIN
+2. ON P1.payer_id = P2.recipient_id AND P1.recipient_id = P2.payer_id
+2. COUNT(DISTINCT )/2
+
+
+*/
+
+SELECT COUNT(DISTINCT (P1.payer_id,P1.recipient_id))/2 AS unique_relationships
+FROM payments P1
+JOIN payments P2
+ON P1.payer_id = P2.recipient_id AND P1.recipient_id = P2.payer_id
