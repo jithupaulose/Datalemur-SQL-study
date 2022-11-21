@@ -1,0 +1,36 @@
+https://datalemur.com/questions/repeated-payments
+
+/**
+CONTEXT: payment transactions
+
+transactions Table
+
+QUESTION: 
+yment transactions are repeated by accident; it could be due to user error,
+API failure or a retry error that causes a credit card to be charged twice.
+
+Using the transactions table, 
+identify any payments made at the 
+      same merchant with the 
+      same credit card for the s
+      ame amount 
+      within 10 minutes of each other.
+      
+STEPS:
+1. WITH CTE 
+2. LAG(transaction_timestamp) OVER(PARTITION BY merchant_id,credit_card_id,
+    amount ORDER BY transaction_timestamp
+3. EXTRACT(minutes FROM )
+*/
+
+WITH CTE AS
+(
+SELECT
+  *,
+  transaction_timestamp - LAG(transaction_timestamp) OVER(PARTITION BY merchant_id,credit_card_id,
+    amount ORDER BY transaction_timestamp) AS timestampInterval
+FROM transactions
+)
+
+SELECT COUNT(merchant_id) AS payment_count
+FROM CTE WHERE EXTRACT(minutes FROM timestampInterval) < 10 
