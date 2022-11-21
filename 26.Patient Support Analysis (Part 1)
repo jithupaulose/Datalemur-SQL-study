@@ -1,0 +1,22 @@
+https://datalemur.com/questions/frequent-callers
+
+/**
+CONTEXT: call an advocate and receive support for their health care needs
+
+PROBLEM:
+Write a query to find how many UHG members made 3 or more calls. 
+case_id column uniquely identifies each call made.
+
+PSEODO CODE:
+1. GROUP BY AND HAVING
+
+*/
+with cte AS
+(
+SELECT 
+policy_holder_id
+FROM callers
+GROUP BY policy_holder_id
+HAVING COUNT(case_id) >=3 
+)
+select counT(*) AS member_count from CTE
