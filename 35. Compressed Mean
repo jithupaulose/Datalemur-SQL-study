@@ -1,0 +1,27 @@
+https://datalemur.com/questions/alibaba-compressed-mean
+
+
+/**
+CONTEXT : MEAN 
+
+PROBLEM:
+find the mean number of items bought per order on Alibaba, 
+rounded to 1 decimal place.
+
+PSEODO CODE:
+1. WITH CTE STATEMENT
+2. SUM(item_count*order_occurrences)
+3. SUM(order_occurrences)
+
+*/
+
+WITH CTE AS
+(
+SELECT
+  SUM(item_count*order_occurrences)::DECIMAL AS Totalitems,
+  SUM(order_occurrences) AS Totalorders
+FROM items_per_order
+)
+SELECT
+ROUND((Totalitems/Totalorders),1) AS mean
+FROM CTE
