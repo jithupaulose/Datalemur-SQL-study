@@ -1,0 +1,31 @@
+https://datalemur.com/questions/non-profitable-drugs
+
+/**
+CONTEXT: pharmacy sales
+
+pharmacy_sales Table
+
+QUESTION:
+
+CVS Health is trying to better understand its pharmacy sales, 
+and how well different products are selling. 
+Each drug can only be produced by one manufacturer.
+
+Write a query to find out which manufacturer is associated 
+with the drugs that were not profitable 
+and how much money CVS lost on these drugs. 
+
+PSEUDO CODE:
+1. GROUP BY manufacturer
+2. drug_count = count(drug)
+3. total_loss = abs(SUM(total_sales - cogs))
+*/
+
+SELECT
+manufacturer,
+count(drug) AS drug_count,
+ABS(SUM(total_sales - cogs)) AS total_loss
+FROM pharmacy_sales
+WHERE total_sales - cogs <= 0
+GROUP BY manufacturer
+ORDER BY 3 DESC
